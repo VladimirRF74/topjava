@@ -9,7 +9,7 @@
 <body>
 <h3><a href="index.html">Home</a></h3>
 <hr>
-<h2>Edit meals</h2>
+<h2>Add/Edit meal</h2>
 <form method="post" action="meals" enctype="application/x-www-form-urlencoded">
     <label>
         <input class="field" hidden type="number" name="id" value="${meal.id}">
