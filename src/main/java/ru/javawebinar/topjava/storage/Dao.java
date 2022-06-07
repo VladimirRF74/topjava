@@ -4,17 +4,19 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.util.List;
 
-public interface Storage {
+public interface Dao {
 
-    Meal get();
+    int size();
+
+    Meal get(int id);
 
     List<Meal> getAll();
 
-    void save();
+    void save(Meal meal);
 
-    void delete();
+    void delete(Integer id);
 
     void clear();
 
-    void update();
+    void update(Integer id, Meal meal);
 }
