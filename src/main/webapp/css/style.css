@@ -5,3 +5,7 @@
 .red {
     color: red;
 }
+
+.first-litter {
+    text-transform: capitalize;
+}

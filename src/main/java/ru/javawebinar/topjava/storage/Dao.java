@@ -2,7 +2,6 @@ package ru.javawebinar.topjava.storage;
 
 import ru.javawebinar.topjava.model.Meal;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface Dao {
@@ -11,11 +10,11 @@ public interface Dao {
 
     List<Meal> getAll();
 
-    Meal create(LocalDateTime dateTime, String description, int calories);
+    Meal create(Meal meal);
 
-    void save(Meal meal);
+//    void create(Meal meal);
 
     void delete(Integer id);
 
-    Meal update(Integer id, LocalDateTime dateTime, String description, int calories);
+    Meal update(Integer id, Meal newMeal);
 }

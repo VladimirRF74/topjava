@@ -2,12 +2,9 @@ package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.storage.DaoMemoryStorageImpl;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,17 +30,12 @@ public class MealsUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static List<MealTo> doMealTo(DaoMemoryStorageImpl daoMemoryStorage) {
-        List<Meal> meals = daoMemoryStorage.getAll();
+    public static List<MealTo> doMealTo(List<Meal> meals) {
         Map<LocalDate, Integer> caloriesSumByDay = meals.stream()
                 .collect(
                         Collectors.groupingBy(Meal::getDate, Collectors.summingInt(Meal::getCalories)));
-        List<MealTo> result = new ArrayList<>();
-        for (Meal meal : meals) {
-            LocalDateTime dateTime = meal.getDateTime();
-            result.add(new MealTo(meal.getId(), dateTime, meal.getDescription(),
-                    meal.getCalories(), caloriesSumByDay.get(dateTime.toLocalDate()) <= CALORIES_PER_DAY));
-        }
-        return result;
+        return meals.stream()
+                .map(meal -> createTo(meal, caloriesSumByDay.get(meal.getDate()) <= CALORIES_PER_DAY))
+                .collect(Collectors.toList());
     }
 }

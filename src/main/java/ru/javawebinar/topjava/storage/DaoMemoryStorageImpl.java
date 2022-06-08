@@ -2,18 +2,20 @@ package ru.javawebinar.topjava.storage;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.web.MealServlet;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DaoMemoryStorageImpl implements Dao {
     private static final Logger log = getLogger(DaoMemoryStorageImpl.class);
-    private final ConcurrentHashMap<Integer, Meal> mapMeals = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Integer, Meal> mapMeals = new ConcurrentHashMap<>();
+    private static final AtomicInteger idCounter = new AtomicInteger(1);
 
     @Override
     public Meal get(int id) {
@@ -27,15 +29,11 @@ public class DaoMemoryStorageImpl implements Dao {
     }
 
     @Override
-    public Meal create(LocalDateTime dateTime, String description, int calories) {
+    public Meal create(Meal meal) {
         log.debug("create meal");
-        return new Meal(dateTime, description, calories);
-    }
-
-    @Override
-    public void save(Meal meal) {
-        log.debug("save to storage");
-        mapMeals.put(meal.getId(), meal);
+        Integer id = createID();
+        meal.setId(id);
+        return mapMeals.putIfAbsent(id, meal);
     }
 
     @Override
@@ -45,13 +43,13 @@ public class DaoMemoryStorageImpl implements Dao {
     }
 
     @Override
-    public Meal update(Integer id, LocalDateTime dateTime, String description, int calories) {
+    public Meal update(Integer id, Meal newMeal) {
         log.debug("update meal in storage");
-        Meal meal = mapMeals.get(id);
-        meal.setDateTime(dateTime);
-        meal.setDescription(description);
-        meal.setCalories(calories);
-        mapMeals.replace(id, meal);
-        return meal;
+        mapMeals.replace(id, newMeal);
+        return newMeal;
+    }
+
+    private static Integer createID() {
+        return idCounter.getAndIncrement();
     }
 }
