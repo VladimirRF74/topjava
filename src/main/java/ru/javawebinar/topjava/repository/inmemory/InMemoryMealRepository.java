@@ -24,6 +24,7 @@ public class InMemoryMealRepository implements MealRepository {
         Map<Integer, Meal> meals = usersMeals.computeIfAbsent(userId, id -> repository);
         if (meal.isNew()) {
             meal.setId(counter.incrementAndGet());
+            meal.setUserId(userId);
             meals.put(meal.getId(), meal);
             return meal;
         }
@@ -46,7 +47,7 @@ public class InMemoryMealRepository implements MealRepository {
     public Collection<Meal> getAll(int userId) {
         Map<Integer, Meal> meals = usersMeals.get(userId);
         return meals == null || meals.isEmpty() ? Collections.emptyList() : meals.values().stream()
-                .filter(m -> m.getId().equals(userId))
+                .filter(m -> m.getUserId() == userId)
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
     }
