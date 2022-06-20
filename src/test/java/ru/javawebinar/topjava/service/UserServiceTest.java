@@ -28,6 +28,7 @@ import static ru.javawebinar.topjava.UserTestData.*;
 public class UserServiceTest {
 
     static {
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
         SLF4JBridgeHandler.install();
     }
 
