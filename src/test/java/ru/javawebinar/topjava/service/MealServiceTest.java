@@ -1,9 +1,7 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExternalResource;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
@@ -53,10 +51,13 @@ public class MealServiceTest {
         }
     };
 
-    @AfterClass
-    public static void setResults() {
-        log.info("\n      Test                   Duration, ms" + "\n" + results);
-    }
+    @ClassRule
+    public static ExternalResource setResults = new ExternalResource() {
+        @Override
+        protected void after() {
+            log.info("\n      Test                   Duration, ms" + "\n" + results);
+        }
+    };
 
     @Autowired
     private MealService service;
